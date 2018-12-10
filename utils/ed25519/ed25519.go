@@ -16,10 +16,11 @@ import (
 	"bytes"
 	"crypto"
 	"errors"
-  "golang.org/x/crypto/blake2b"
 	"io"
+	"memwallet/utils/edwards25519"
 	"strconv"
-	"./edwards25519"
+
+	"golang.org/x/crypto/blake2b"
 )
 
 const (
@@ -61,9 +62,9 @@ func (priv PrivateKey) Sign(rand io.Reader, message []byte, opts crypto.SignerOp
 // If rand is nil, crypto/rand.Reader will be used.
 func GenerateKey(secret [32]byte) (publicKey PublicKey, privateKey PrivateKey) {
 	publicKey = make([]byte, PublicKeySize)
-  privateKey = make([]byte, PrivateKeySize)
-  copy(privateKey[:32], secret[:])
-  digest := blake2b.Sum512(secret[:])
+	privateKey = make([]byte, PrivateKeySize)
+	copy(privateKey[:32], secret[:])
+	digest := blake2b.Sum512(secret[:])
 	digest[0] &= 248
 	digest[31] &= 127
 	digest[31] |= 64
